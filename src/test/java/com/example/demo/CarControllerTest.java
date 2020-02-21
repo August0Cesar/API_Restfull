@@ -1,13 +1,9 @@
 package com.example.demo;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
 
 import org.junit.Before;
@@ -21,7 +17,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import com.example.demo.utils.DateUtils;
 
 import br.com.augusto.api_teste.controller.CarController;
 import br.com.augusto.api_teste.model.Car;
@@ -42,12 +37,12 @@ public class CarControllerTest extends ApiTesteApplicationTests {
 	@Before
 	public void setUp() {
 		this.mockMvc = MockMvcBuilders.standaloneSetup(carController).build();
-		this.carRepository.deleteAll();
-		List<Car> listaCarros = Arrays.asList(
-				new Car(new Long("1"), "Chevett", "MG", "BRANCO", new Date()),
-				new Car(new Long("2"), "Chevett", "MG", "BRANCO", new Date()));
+		//this.carRepository.deleteAll();
+//		List<Car> listaCarros = Arrays.asList(
+//				new Car(new Long("1"), "Chevett", "MG", "BRANCO", new Date()),
+//				new Car(new Long("2"), "Chevett", "MG", "BRANCO", new Date()));
 
-		this.carRepository.save(listaCarros);
+		//this.carRepository.save(listaCarros);
 	}
 
 	protected String json(Car car) throws IOException {
@@ -68,18 +63,20 @@ public class CarControllerTest extends ApiTesteApplicationTests {
 
 	}
 	//testa o serviço que retorna lista de carros
-	@Test
-	public void getAllCarsTes() throws Exception {
-		System.out.println("Teste getAllCarsTest()");
-		List<Car> listaCarros = this.carRepository.findAll();
-		this.mockMvc.perform(MockMvcRequestBuilders.get("/api/carros")
-				.contentType(this.contentType))
-				.andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
-				.andExpect(jsonPath("$[0].nome", is(listaCarros.get(0).getNome())))
-				.andExpect(jsonPath("$[0].estado", is(listaCarros.get(0).getEstado())))
-				.andExpect(jsonPath("$[0].dataFabricacao",is(DateUtils.formataDate(listaCarros.get(0).getDataFabricacao()))))
-				.andExpect(jsonPath("$[0].cor", is(listaCarros.get(0).getCor())));
-				
-	}
+	/*
+	 * @Test public void getAllCarsTes() throws Exception {
+	 * System.out.println("Teste getAllCarsTest()"); List<Car> listaCarros =
+	 * this.carRepository.findAll();
+	 * this.mockMvc.perform(MockMvcRequestBuilders.get("/api/carros")
+	 * .contentType(this.contentType))
+	 * .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
+	 * .andExpect(jsonPath("$[0].nome", is(listaCarros.get(0).getNome())))
+	 * .andExpect(jsonPath("$[0].estado", is(listaCarros.get(0).getEstado())))
+	 * .andExpect(jsonPath("$[0].dataFabricacao",is(DateUtils.formataDate(
+	 * listaCarros.get(0).getDataFabricacao())))) .andExpect(jsonPath("$[0].cor",
+	 * is(listaCarros.get(0).getCor())));
+	 * 
+	 * }
+	 */
 
 }

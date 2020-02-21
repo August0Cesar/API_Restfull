@@ -2,26 +2,16 @@ package br.com.augusto.api_teste.model;
 
 import java.util.Date;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
-import org.springframework.format.annotation.DateTimeFormat;
-
-@Entity
-@Table(name = "car")
+//@Entity
+//@Table(name = "car")
 public class Car {
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+//    @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private  String nome;
     private String estado;
     private String cor;
-    @Temporal(TemporalType.DATE)
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
+//    @Temporal(TemporalType.DATE)
+//	@DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date dataFabricacao;
     
 	public Car() {

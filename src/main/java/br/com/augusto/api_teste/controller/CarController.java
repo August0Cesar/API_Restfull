@@ -1,14 +1,15 @@
 package br.com.augusto.api_teste.controller;
 
-
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,61 +20,46 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.augusto.api_teste.model.Car;
-import br.com.augusto.api_teste.repository.CarRepository;
+import br.com.augusto.api_teste.model.response.CarResponse;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/v1/carros")
 public class CarController {
-	@Autowired
-	CarRepository carRepository;
+	private static final Logger LOGGER = LogManager.getLogger(CarController.class);
+	
+	private static List<Car> carros = Arrays.asList(new Car(1L, "Jeep Renagate", "SP", "Branco", new Date()),
+			new Car(10L, "Renault Sandero", "SP", "Preto", new Date()),
+			new Car(2L, "Fiat Punto", "MG", "Cinza", new Date()),
+			new Car(3L, "Fiat Toro", "AM", "Vermelho", new Date()));
 
-	@GetMapping("/carros")
-	@CrossOrigin(origins = "http://localhost:4200")
-	public List<Car> getAllCar() {
-		return carRepository.findAll();
-				//.stream().filter(this::isCool).collect(Collectors.toList());
+	@GetMapping
+	public ResponseEntity<List<CarResponse>> getAllCar() {
+		
+		LOGGER.info("Buscando carros ...");
+		return new ResponseEntity<List<CarResponse>>(CarResponse.getCars(carros), HttpStatus.OK);
+	}
+	
+	@GetMapping("/{id}")
+	public ResponseEntity<CarResponse> getCarById(@PathVariable(value = "id") Long carId) {
+		LOGGER.info("Buscando carro pelo id => " + carId);
+		return new ResponseEntity<CarResponse>(CarResponse.getCarById(carros,carId), HttpStatus.OK);
 	}
 
-	private boolean isCool(Car car) {
-		return !car.getNome().equals("AMC Gremlin") && !car.getNome().equals("Triumph Stag")
-				&& !car.getNome().equals("Ford Pinto") && !car.getNome().equals("Yugo GV");
-	}
-
-	@PostMapping("/carros")
-	@CrossOrigin(origins = "http://localhost:4200")
+	@PostMapping
 	public Car createCar(@RequestBody Car car) {
-		//if(StringUtils.isEmpty(car.getEstado()))
-			
-			
-		try {
-			return carRepository.save(car);
-		} catch (Exception e) {
-			e.getMessage();
-		}
+
 		return null;
 	}
 
-	@PutMapping("/carros/{id}")
+	@PutMapping("/{id}")
 	public ResponseEntity<Car> updateCar(@PathVariable(value = "id") Long carId, @Valid @RequestBody Car cardetalhes) {
-		Car car = carRepository.findOne(carId);
-		if (car == null) {
-			return ResponseEntity.notFound().build();
-		}
-		car.setNome(cardetalhes.getNome());
-
-		Car updatedcar = carRepository.save(car);
-		return ResponseEntity.ok(updatedcar);
+		
+		return new ResponseEntity<Car>(cardetalhes, HttpStatus.CREATED);
 	}
-	
-	@DeleteMapping("/carros/{id}")
-	public ResponseEntity<Car> deleteCar(@PathVariable(value = "id") Long carId) {
-	    Car car = carRepository.findOne(carId);
-	    if(car == null) {
-	        return ResponseEntity.notFound().build();
-	    }
 
-	    carRepository.delete(car);
-	    return ResponseEntity.ok().build();
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Car> deleteCar(@PathVariable(value = "id") Long carId) {
+		return ResponseEntity.ok().build();
 	}
 
 }
