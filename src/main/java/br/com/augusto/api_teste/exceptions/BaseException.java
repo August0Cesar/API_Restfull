@@ -8,6 +8,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -20,12 +21,19 @@ public class BaseException extends ResponseEntityExceptionHandler {
 	@Override
 	protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers,
 			HttpStatus status, WebRequest request) {
+
+		LOGGER.warn("Nova exception ...");
+
+		ApiError apiError = new ApiError(status, "Missing Request", Arrays.asList(ex.getMessage()));
+
+		return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
+	}
+
+	@ExceptionHandler(CarNotFoundException.class)
+	public ResponseEntity<Object> handlerCarNotFoundException(CarNotFoundException ex, WebRequest request) {
 		
 		LOGGER.warn("Nova exception ...");
-		
-		ApiError apiError = new ApiError(status, "Missing Request", Arrays.asList(ex.getMessage()));
-		
-		return new ResponseEntity<>(apiError,
-				new HttpHeaders(), apiError.getStatus());
+		ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, ex.getMessage(), Arrays.asList(ex.getMessage()));
+		return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
 	}
 }

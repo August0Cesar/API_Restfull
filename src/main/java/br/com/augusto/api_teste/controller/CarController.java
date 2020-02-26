@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.augusto.api_teste.exceptions.CarNotFoundException;
 import br.com.augusto.api_teste.model.Car;
 import br.com.augusto.api_teste.model.response.CarResponse;
 
@@ -40,9 +41,14 @@ public class CarController {
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<CarResponse> getCarById(@PathVariable(value = "id") Long carId) {
+	public ResponseEntity<CarResponse> getCarById(@PathVariable(value = "id") Long carId) throws CarNotFoundException {
 		LOGGER.info("Buscando carro pelo id => " + carId);
-		return new ResponseEntity<CarResponse>(CarResponse.getCarById(carros,carId), HttpStatus.OK);
+		CarResponse response = CarResponse.getCarById(carros,carId);
+		if(response != null) {
+			return new ResponseEntity<CarResponse>(response, HttpStatus.OK);
+		}
+		
+		throw new CarNotFoundException("Usuario não encontrado.");
 	}
 
 	@PostMapping
