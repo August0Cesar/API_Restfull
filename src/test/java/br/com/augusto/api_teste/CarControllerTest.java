@@ -1,4 +1,4 @@
-package com.example.demo;
+package br.com.augusto.api_teste;
 
 
 import java.io.IOException;
@@ -28,22 +28,22 @@ public class CarControllerTest extends ApiTesteApplicationTests {
 	private MediaType contentType = new MediaType(MediaType.APPLICATION_JSON.getType(),
 			MediaType.APPLICATION_JSON.getSubtype(), Charset.forName("utf8"));
 
-	@Autowired
-	CarController carController;
+//	@Autowired
+//	CarController carController;
+//
+//	@Autowired
+//  CarRepository carRepository;
 
-	@Autowired
-	CarRepository carRepository;
-
-	@Before
-	public void setUp() {
-		this.mockMvc = MockMvcBuilders.standaloneSetup(carController).build();
+//	@Before
+//	public void setUp() {
+//		this.mockMvc = MockMvcBuilders.standaloneSetup(carController).build();
 		//this.carRepository.deleteAll();
 //		List<Car> listaCarros = Arrays.asList(
 //				new Car(new Long("1"), "Chevett", "MG", "BRANCO", new Date()),
 //				new Car(new Long("2"), "Chevett", "MG", "BRANCO", new Date()));
 
 		//this.carRepository.save(listaCarros);
-	}
+//	}
 
 	protected String json(Car car) throws IOException {
 		MockHttpOutputMessage mockHttpOutputMessage = new MockHttpOutputMessage();
@@ -52,6 +52,7 @@ public class CarControllerTest extends ApiTesteApplicationTests {
 		return mockHttpOutputMessage.getBodyAsString();
 	}
 
+	/*
 	@Test
 	public void createCarTest() throws Exception {
 		System.out.println("Teste createCarTest()");
@@ -61,7 +62,8 @@ public class CarControllerTest extends ApiTesteApplicationTests {
 				contentType(this.contentType).content(carJson))
 				.andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
 
-	}
+	} */
+	
 	//testa o serviço que retorna lista de carros
 	/*
 	 * @Test public void getAllCarsTes() throws Exception {
