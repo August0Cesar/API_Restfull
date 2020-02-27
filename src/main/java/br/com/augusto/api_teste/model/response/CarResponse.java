@@ -7,7 +7,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import br.com.augusto.api_teste.model.Car;
+import br.com.augusto.api_teste.model.CarSedan;
+import br.com.augusto.api_teste.model.Vehicle;
 
 public class CarResponse {
 	private Long id;
@@ -15,13 +16,39 @@ public class CarResponse {
 	private String estado;
 	private String cor;
 	private String dataFabricacao;
+	private String type;
+	private Boolean automatic;
 
-	public CarResponse(Car car) {
+	public CarResponse(Vehicle car) {
 		this.id = car.getId();
 		this.cor = car.getCor();
 		this.nome = car.getNome();
 		this.estado = car.getEstado();
 		this.dataFabricacao = formataDate(car.getDataFabricacao());
+		this.type = car.getType();
+		
+		if(car instanceof CarSedan) {
+			this.automatic = ((CarSedan) car).getAutomatic(); 
+		}
+	}
+	
+
+	public Boolean getAutomatic() {
+		return automatic;
+	}
+
+
+	public void setAutomatic(Boolean automatic) {
+		this.automatic = automatic;
+	}
+
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	public Long getId() {
@@ -64,7 +91,7 @@ public class CarResponse {
 		this.dataFabricacao = dataFabricacao;
 	}
 
-	public static List<CarResponse> getCars(List<Car> carros) {
+	public static List<CarResponse> getCars(List<Vehicle> carros) {
 		List<CarResponse> carrosResponse = new ArrayList<>();
 
 		carros.forEach(car -> carrosResponse.add(new CarResponse(car)));
@@ -72,14 +99,19 @@ public class CarResponse {
 	}
 
 	static public String formataDate(Date data) {
+		if (data == null) {
+			return null;
+		}
+
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(data);
 		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 		return format.format(calendar.getTime()).replaceAll("/", "-");
 	}
 
-	public static CarResponse getCarById(List<Car> carros, Long carId) {
-		Optional<Car> optional = carros.stream().filter(c -> c.getId() == carId).findFirst();
+	public static CarResponse getCarById(List<Vehicle> carros, Long carId) {
+		Optional<Vehicle> optional = carros.stream().filter(c -> c.getId().longValue() == carId.longValue())
+				.findFirst();
 		if (!optional.isPresent()) {
 			return null;
 		}

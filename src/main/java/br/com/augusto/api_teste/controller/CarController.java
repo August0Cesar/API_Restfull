@@ -1,6 +1,7 @@
 package br.com.augusto.api_teste.controller;
 
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -19,8 +20,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.augusto.api_teste.VehicleFactory;
 import br.com.augusto.api_teste.exceptions.CarNotFoundException;
-import br.com.augusto.api_teste.model.Car;
+import br.com.augusto.api_teste.model.CarHatch;
+import br.com.augusto.api_teste.model.CarSedan;
+import br.com.augusto.api_teste.model.Vehicle;
+import br.com.augusto.api_teste.model.request.CarRequest;
 import br.com.augusto.api_teste.model.response.CarResponse;
 
 @RestController
@@ -28,10 +33,12 @@ import br.com.augusto.api_teste.model.response.CarResponse;
 public class CarController {
 	private static final Logger LOGGER = LogManager.getLogger(CarController.class);
 	
-	private static List<Car> carros = Arrays.asList(new Car(1L, "Jeep Renagate", "SP", "Branco", new Date()),
-			new Car(10L, "Renault Sandero", "SP", "Preto", new Date()),
-			new Car(2L, "Fiat Punto", "MG", "Cinza", new Date()),
-			new Car(3L, "Fiat Toro", "AM", "Vermelho", new Date()));
+	private static List<Vehicle> carros = Arrays.asList(new CarHatch(1L, "Jeep Renagate", "SP", "Branco", new Date(),"Hatch"),
+			new CarHatch(10L, "Renault Sandero", "SP", "Preto", new Date(),"Hatch"),
+			new CarSedan(188L, "Arrizo 5", "US", "Blue", Calendar.getInstance().getTime(), "Sedan",false),
+			new CarHatch(2L, "Fiat Punto", "MG", "Cinza", new Date(),"Hatch"),
+			new CarHatch(3L, "Fiat Toro", "AM", "Vermelho", new Date(),"Hatch"),
+			new CarSedan(188L, "Sedã grande Honda Accord", "AM", "Cinza", Calendar.getInstance().getTime(), "Sedan",true));
 
 	@GetMapping
 	public ResponseEntity<List<CarResponse>> getAllCar() {
@@ -48,23 +55,31 @@ public class CarController {
 			return new ResponseEntity<CarResponse>(response, HttpStatus.OK);
 		}
 		
-		throw new CarNotFoundException("Usuario não encontrado.");
+		throw new CarNotFoundException("Vehicle not found.");
 	}
 
 	@PostMapping
-	public Car createCar(@RequestBody Car car) {
-
-		return null;
+	public ResponseEntity<CarResponse> createCar(@RequestBody CarRequest carRequest) throws CarNotFoundException {
+		
+		Vehicle vehicle = VehicleFactory.createVehicle(carRequest);
+		if(vehicle == null) {
+			throw new CarNotFoundException("Not find type of vehicle for " + carRequest.getType() + ".");
+		}
+		
+		CarResponse response = new CarResponse(vehicle);
+		response.setId(1111L);
+		
+		return new ResponseEntity<CarResponse>(response, HttpStatus.CREATED);
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Car> updateCar(@PathVariable(value = "id") Long carId, @Valid @RequestBody Car cardetalhes) {
+	public ResponseEntity<CarHatch> updateCar(@PathVariable(value = "id") Long carId, @Valid @RequestBody CarHatch cardetalhes) {
 		
-		return new ResponseEntity<Car>(cardetalhes, HttpStatus.CREATED);
+		return new ResponseEntity<CarHatch>(cardetalhes, HttpStatus.CREATED);
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Car> deleteCar(@PathVariable(value = "id") Long carId) {
+	public ResponseEntity<CarHatch> deleteCar(@PathVariable(value = "id") Long carId) {
 		return ResponseEntity.ok().build();
 	}
 

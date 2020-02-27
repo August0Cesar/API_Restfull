@@ -19,7 +19,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 
 import br.com.augusto.api_teste.controller.CarController;
-import br.com.augusto.api_teste.model.Car;
+import br.com.augusto.api_teste.model.CarHatch;
 import br.com.augusto.api_teste.repository.CarRepository;
 
 public class CarControllerTest extends ApiTesteApplicationTests {
@@ -45,7 +45,7 @@ public class CarControllerTest extends ApiTesteApplicationTests {
 		//this.carRepository.save(listaCarros);
 //	}
 
-	protected String json(Car car) throws IOException {
+	protected String json(CarHatch car) throws IOException {
 		MockHttpOutputMessage mockHttpOutputMessage = new MockHttpOutputMessage();
 		MappingJackson2HttpMessageConverter m = new MappingJackson2HttpMessageConverter();
 		m.write(car, contentType, mockHttpOutputMessage);
